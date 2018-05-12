@@ -82,7 +82,9 @@ export default class WysiwygEditor extends Component {
     customBlockRenderFunc: PropTypes.func,
     wrapperId: PropTypes.number,
     customDecorators: PropTypes.array,
-    editorRef: PropTypes.func
+    editorRef: PropTypes.func,
+    customBlockrenderMap:PropTypes.object,
+    customStyleMap:PropTypes.object
   };
 
   static defaultProps = {
@@ -90,7 +92,8 @@ export default class WysiwygEditor extends Component {
     toolbarHidden: false,
     stripPastedStyles: false,
     localization: { locale: "en", translations: {} },
-    customDecorators: []
+    customDecorators: [],
+      customStyleMap:{}
   };
 
   constructor(props) {
@@ -117,7 +120,7 @@ export default class WysiwygEditor extends Component {
       props.customBlockRenderFunc
     );
     this.editorProps = this.filterEditorProps(props);
-    this.customStyleMap = getCustomStyleMap();
+    this.customStyleMap = Object.assign(getCustomStyleMap(),props.customStyleMap);
   }
 
   componentWillMount(): void {
@@ -496,7 +499,7 @@ export default class WysiwygEditor extends Component {
           <div
             className={classNames("rdw-editor-toolbar", toolbarClassName)}
             style={{
-              visibility: toolbarShow ? "visible" : "hidden",
+              visibility: toolbarShow ? "flex" : "none",
               ...toolbarStyle
             }}
             onMouseDown={this.preventDefault}
@@ -536,13 +539,13 @@ export default class WysiwygEditor extends Component {
             editorState={editorState}
             onChange={this.onChange}
             blockStyleFn={blockStyleFn}
-            customStyleMap={getCustomStyleMap()}
+            customStyleMap={this.customStyleMap}
             handleReturn={this.handleReturn}
             handlePastedText={this.handlePastedText}
             blockRendererFn={this.blockRendererFn}
             handleKeyCommand={this.handleKeyCommand}
             ariaLabel={ariaLabel || "rdw-editor"}
-            blockRenderMap={blockRenderMap}
+            blockRenderMap={blockRenderMap.merge(this.props.customBlockRenderMap)}
             {...this.editorProps}
           />
         </div>

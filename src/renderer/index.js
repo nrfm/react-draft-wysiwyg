@@ -3,7 +3,7 @@ import getImageComponent from '../renderer/Image';
 
 const getBlockRenderFunc = (config, customBlockRenderer) => (block) => {
   if (typeof customBlockRenderer === 'function') {
-    const renderedComponent = customBlockRenderer(block, config, config.getEditorState);
+    const renderedComponent = customBlockRenderer(block, config, config.getEditorState,getImageComponent,Embedded);
     if (renderedComponent) return renderedComponent;
   }
   if (block.getType() === 'atomic') {
